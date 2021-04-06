@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.myitinerary.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="com.example.myitinerary.ui.itinerary.ItineraryFragment"
+        android:label="@string/menu_Itineraries"
+        tools:layout="@layout/fragment_itineraries" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.myitinerary.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_shared"
+        android:name="com.example.myitinerary.ui.shared.SharedFragment"
+        android:label="@string/menu_shared"
+        tools:layout="@layout/fragment_shared" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.myitinerary.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_profile"
+        android:name="com.example.myitinerary.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

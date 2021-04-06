@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyItinerary">
+        <activity android:name=".ForgotPassword"></activity>
         <activity
             android:name=".Itineraries"
             android:label="@string/title_activity_itineraries"
-            android:theme="@style/Theme.MyItinerary.NoActionBar"></activity>
+            android:theme="@style/Theme.MyItinerary.NoActionBar" />
         <activity android:name=".RegisterUser" />
         <activity android:name=".MainActivity">
             <intent-filter>
