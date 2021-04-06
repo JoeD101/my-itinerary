@@ -28,6 +28,11 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Itineraries extends AppCompatActivity {
 
@@ -37,6 +42,25 @@ public class Itineraries extends AppCompatActivity {
     private DatabaseReference ref;
     private String uid;
     private String name;
+    private FirebaseFirestore db;
+
+
+    public static void createItineraryEntry(int startTimeItin, int endTimeItin, String name, String location, int startTimeEvent, int endTimeEvent, String uid, FirebaseFirestore db){
+        CollectionReference itinerary = db.collection(uid);
+        Map<String, Object> itin1 = new HashMap<>();
+
+        itin1.put("endTime", startTimeItin);
+        itin1.put("startTime", endTimeItin);
+        itin1.put("name", "Example");
+        itin1.put("events", uid.concat(name));
+        itinerary.document(name).set(itin1);
+        CollectionReference events = db.collection(uid.concat(name));
+        itin1 = new HashMap<>();
+        itin1.put("location", location);
+        itin1.put("endTime", endTimeEvent);
+        itin1.put("startTime", startTimeEvent);
+        events.document(location).set(itin1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +71,7 @@ public class Itineraries extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         ref = FirebaseDatabase.getInstance().getReference("Users");
         uid = user.getUid();
+        db = FirebaseFirestore.getInstance();
 
         ref.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -66,6 +91,7 @@ public class Itineraries extends AppCompatActivity {
 
             }
         });
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -103,4 +129,5 @@ public class Itineraries extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 }

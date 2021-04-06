@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import android.util.Patterns;
 import android.view.View;
@@ -25,6 +26,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private TextView goToLoginBtn;
     private EditText editTextTextPersonName, editTextEmail, editTextPassword, editTextPasswordConfirm;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_register_user);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         goToLoginBtn = (TextView) findViewById(R.id.goToLoginBtn);
         goToLoginBtn.setOnClickListener(this);
@@ -120,7 +123,26 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                             if(task.isSuccessful())
                             {
                                 Toast.makeText(RegisterUser.this,
+                                        "", Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(RegisterUser.this,
+                                        "Failed", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("itineraries")
+                            .setValue(FirebaseAuth.getInstance().getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                Toast.makeText(RegisterUser.this,
                                         "Registration successful, you can log in now", Toast.LENGTH_LONG).show();
+                               Itineraries.createItineraryEntry(0, 0, "example", "Pittsburgh", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(), db);
                                 startActivity(new Intent(RegisterUser.this, MainActivity.class));
 
                             }
