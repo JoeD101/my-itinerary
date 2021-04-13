@@ -6,15 +6,19 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_baseline_menu_book_24"
-            android:title="@string/my_itineraries" />
+            android:icon="@drawable/book"
+            android:title="@string/my_itineraries"
+            android:color="@color/white" />
         <item
             android:id="@+id/nav_shared"
-            android:icon="@drawable/ic_baseline_people_24"
-            android:title="@string/shared" />
+            android:icon="@drawable/shared"
+            android:title="@string/shared"
+            android:color="@color/white"
+        />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_baseline_info_24"
+            android:color="@color/white"
+            android:icon="@drawable/profile"
             android:title="@string/profile" />
     </group>
 </menu>

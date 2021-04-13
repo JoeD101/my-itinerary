@@ -34,5 +34,8 @@
     <!-- Profile Page -->
     <string name="new_password">New Password</string>
     <string name="new_password_confirm">New Password Confirm</string>
+    <string name="update_password">Update Password</string>
     <string name="update_profile">Update Profile</string>
+    <string name="home_city">Home City</string>
+    <string name="bio">Bio</string>
 </resources>

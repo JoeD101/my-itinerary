@@ -1,4 +1,4 @@
-package com.example.myitinerary.ui.shared;
+package com.example.myitinerary;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,14 +16,11 @@ import com.example.myitinerary.R;
 
 public class SharedFragment extends Fragment {
 
-    private SharedViewModel sharedViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        sharedViewModel =
-                new ViewModelProvider(this).get(SharedViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_shared, container, false);
+        View view = inflater.inflate(R.layout.fragment_shared, container, false);
 
-        return root;
+        return view;
     }
 }

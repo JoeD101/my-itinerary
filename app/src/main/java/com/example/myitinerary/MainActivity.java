@@ -1,101 +1,121 @@
 package com.example.myitinerary;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.Menu;
 import android.widget.TextView;
-import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 // import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+import java.util.HashMap;
+import java.util.Map;
 
-    private TextView goToRegisterBtn, forgotPasswordBtn;
-    private Button loginSubmitBtn;
-    private EditText editTextEmail, editTextPassword, editTextPasswordConfirm;
-    private FirebaseAuth mAuth;
+public class MainActivity extends AppCompatActivity {
+
+    private AppBarConfiguration mAppBarConfiguration;
+
+    public static void createItineraryEntry(int startTimeItin, int endTimeItin,
+                                            String name, String location, int startTimeEvent,
+                                            int endTimeEvent, String uid, FirebaseFirestore db) {
+        CollectionReference itinerary = db.collection(uid);
+        Map<String, Object> itin1 = new HashMap<>();
+
+        itin1.put("endTime", startTimeItin);
+        itin1.put("startTime", endTimeItin);
+        itin1.put("name", "Example");
+        itin1.put("events", uid.concat(name));
+        itinerary.document(name).set(itin1);
+        CollectionReference events = db.collection(uid.concat(name));
+        itin1 = new HashMap<>();
+        itin1.put("location", location);
+        itin1.put("endTime", endTimeEvent);
+        itin1.put("startTime", startTimeEvent);
+        events.document(location).set(itin1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users");
+        assert user != null;
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        loginSubmitBtn = (Button) findViewById(R.id.loginSubmitBtn);
-        loginSubmitBtn.setOnClickListener(this);
-        goToRegisterBtn = (TextView) findViewById(R.id.goToRegisterBtn);
-        goToRegisterBtn.setOnClickListener(this);
-        forgotPasswordBtn = findViewById(R.id.forgotPasswordBtn);
-        forgotPasswordBtn.setOnClickListener(this);
+        //set top bar with user's name
+        userRef.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                assert userProfile != null;
+                TextView nameHeader = findViewById(R.id.name_header);
+                TextView locationHeader = findViewById(R.id.location_header);
+                nameHeader.setText(userProfile.name);
+                locationHeader.setText(userProfile.location);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_shared, R.id.nav_profile)
+                .setOpenableLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        //logout button
+        findViewById(R.id.logout).setOnClickListener(v -> {
+            auth.signOut();
+            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+        });
     }
 
     @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.goToRegisterBtn:
-                startActivity(new Intent(this, RegisterUser.class));
-                break;
-            case R.id.loginSubmitBtn:
-                userLogin();
-                break;
-            case R.id.forgotPasswordBtn:
-                startActivity(new Intent(this, ForgotPassword.class));
-                break;
-        }
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.itineraries, menu);
+        return true;
     }
 
-    private void userLogin()
-    {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-        //form validation
-        if(email.isEmpty()) {
-            editTextEmail.setError("Please enter an email");
-            editTextEmail.requestFocus();
-            return;
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            editTextEmail.setError("Please enter a valid email");
-            editTextEmail.requestFocus();
-            return;
-        }
-        if(password.isEmpty()) {
-            editTextPassword.setError("Please enter a password");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
-                    startActivity(new Intent(MainActivity.this, Itineraries.class));
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this,
-                            "Bad credentials", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
+
 }

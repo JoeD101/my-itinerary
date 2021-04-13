@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ForgotPassword extends AppCompatActivity implements View.OnClickListener {
+public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText editTextEmail;
     private Button resetPSubmitBtn;
@@ -37,8 +37,8 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v)
     {
-        switch(v.getId()){
-            case R.id.resetPSubmitBtn: resetPassword();
+        if (v.getId() == R.id.resetPSubmitBtn) {
+            resetPassword();
         }
     }
 
@@ -65,13 +65,13 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
                     {
                         if(task.isSuccessful())
                         {
-                            Toast.makeText(ForgotPassword.this,
+                            Toast.makeText(ForgotPasswordActivity.this,
                                     "We'll send you an email",
                                     Toast.LENGTH_LONG).show();
                         }
                         else
                         {
-                            Toast.makeText(ForgotPassword.this,
+                            Toast.makeText(ForgotPasswordActivity.this,
                                     "Error. Make sure email is correct",
                                     Toast.LENGTH_LONG).show();
                         }

@@ -20,7 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button registerSubmitBtn;
     private TextView goToLoginBtn;
@@ -31,7 +31,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_user);
+        setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -53,7 +53,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.goToLoginBtn:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case R.id.registerSubmitBtn:
                 registerUser();
@@ -114,7 +114,8 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
-                    User user = new User(fullName, email);
+                    //location and bio can be set later in settings
+                    User user = new User(fullName, email, "", "");
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                             .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -123,12 +124,12 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                             if(task.isSuccessful())
                             {
                                 FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
-                                Toast.makeText(RegisterUser.this,
+                                Toast.makeText(RegisterActivity.this,
                                         "Email verification sent", Toast.LENGTH_SHORT).show();
                             }
                             else
                             {
-                                Toast.makeText(RegisterUser.this,
+                                Toast.makeText(RegisterActivity.this,
                                         "Failed", Toast.LENGTH_LONG).show();
                             }
                         }
@@ -141,15 +142,15 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful())
                             {
-                                Toast.makeText(RegisterUser.this,
+                                Toast.makeText(RegisterActivity.this,
                                         "Registration successful, you can log in now", Toast.LENGTH_LONG).show();
-                               Itineraries.createItineraryEntry(0, 0, "example", "Pittsburgh", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(), db);
-                                startActivity(new Intent(RegisterUser.this, MainActivity.class));
+                               MainActivity.createItineraryEntry(0, 0, "example", "Pittsburgh", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(), db);
+                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
 
                             }
                             else
                             {
-                                Toast.makeText(RegisterUser.this,
+                                Toast.makeText(RegisterActivity.this,
                                         "Failed", Toast.LENGTH_LONG).show();
                             }
                         }
