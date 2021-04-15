@@ -1,5 +1,6 @@
 package com.example.myitinerary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 public class ItineraryFragment extends Fragment {
 
@@ -18,8 +18,9 @@ public class ItineraryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_itineraries, container, false);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        fab.setOnClickListener(v -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        fab.setOnClickListener(v -> startActivity(new Intent(getActivity(),
+                CreateItinerary.class)));
+
 
         return view;
     }

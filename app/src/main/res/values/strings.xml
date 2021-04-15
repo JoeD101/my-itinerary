@@ -38,4 +38,9 @@
     <string name="update_profile">Update Profile</string>
     <string name="home_city">Home City</string>
     <string name="bio">Bio</string>
+
+    <!-- Create new Itinerary -->
+    <string name="new_itinerary">New Itinerary</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
 </resources>

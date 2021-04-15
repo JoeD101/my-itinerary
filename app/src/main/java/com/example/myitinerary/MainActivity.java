@@ -35,24 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
-    public static void createItineraryEntry(int startTimeItin, int endTimeItin,
-                                            String name, String location, int startTimeEvent,
-                                            int endTimeEvent, String uid, FirebaseFirestore db) {
-        CollectionReference itinerary = db.collection(uid);
-        Map<String, Object> itin1 = new HashMap<>();
 
-        itin1.put("endTime", startTimeItin);
-        itin1.put("startTime", endTimeItin);
-        itin1.put("name", "Example");
-        itin1.put("events", uid.concat(name));
-        itinerary.document(name).set(itin1);
-        CollectionReference events = db.collection(uid.concat(name));
-        itin1 = new HashMap<>();
-        itin1.put("location", location);
-        itin1.put("endTime", endTimeEvent);
-        itin1.put("startTime", startTimeEvent);
-        events.document(location).set(itin1);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
