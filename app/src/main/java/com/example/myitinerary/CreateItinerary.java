@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -18,17 +21,20 @@ import java.util.Map;
 public class CreateItinerary extends AppCompatActivity {
 
     // used in registration and createItinerary
-    public static void createItineraryEntry(String itinName, String uid) {
+    public static void createItineraryEntry(String itinName, String itinDescription, String uid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference itinerary = db.collection(uid);
-        Map<String, Object> itin1 = new HashMap<>();
+        DocumentReference itineraries = db.collection("itineraries").document("users");
+        CollectionReference userItineraries = itineraries.collection(uid);
 
-        itin1.put("endTime", 0);
-        itin1.put("startTime", 0);
-        itin1.put("name", "Example");
-        itin1.put("events", uid.concat(itinName));
-        itinerary.document(itinName).set(itin1);
-        CollectionReference events = db.collection(uid.concat(itinName));
+        Map<String, Object> itin1 = new HashMap<>();
+        //needs automatically calculated and put into INFO document of itinerary event collection
+        itin1.put("timeStart", 0);
+        itin1.put("timeEnd", 0);
+        itin1.put("description", itinDescription);
+        // set itinerary name
+        userItineraries.document(itinName).set(itin1);
+        // create collection for events in that itinerary
+        //userItineraries.document(itinName).collection("events");
 
         // first event
         /* itin1 = new HashMap<>();
@@ -43,7 +49,9 @@ public class CreateItinerary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_itinerary);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+
+        EditText itinNameEditText = findViewById(R.id.editNameItinerary);
+        EditText itinDescEditText = findViewById(R.id.editDescription);
 
         // go back to main activity
         ImageButton backItinerary = findViewById(R.id.backItineraries);
@@ -52,9 +60,26 @@ public class CreateItinerary extends AppCompatActivity {
 
         Button createItinerary = findViewById(R.id.createItineraryBtn);
         createItinerary.setOnClickListener(v -> {
-
+            // validate input
+            String itinName = itinNameEditText.getText().toString().trim();
+            if(itinName.isEmpty())
+            {
+                itinNameEditText.setError("Please enter an itinerary name");
+                itinNameEditText.requestFocus();
+                return;
+            }
+            // optional entry
+            String itinDescription = itinDescEditText.getText().toString().trim();
+            if(itinDescription.isEmpty())
+            {
+                itinDescription = "";
+            }
             assert user != null;
-            CollectionReference userItineraries = fs.collection(user.getUid());
-                });
+            CreateItinerary.createItineraryEntry(itinName, itinDescription, user.getUid());
+
+            Toast.makeText(CreateItinerary.this,
+                    "Itinerary created", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(CreateItinerary.this, MainActivity.class));
+        });
     }
 }

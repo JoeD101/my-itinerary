@@ -136,6 +136,12 @@ public class ProfileFragment extends Fragment {
 
             if(!editName.getText().toString().equals(currentName))
             {
+                if(!editName.getText().toString().contains(" "))
+                {
+                    editName.setError("Please enter a first and last name");
+                    editName.requestFocus();
+                    return;
+                }
                 currentName = editName.getText().toString();
                 profileUpdated = true;
                 userRef.child(user.getUid()).child("name").setValue(currentName);

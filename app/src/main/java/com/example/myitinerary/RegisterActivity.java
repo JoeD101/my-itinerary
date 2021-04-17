@@ -131,6 +131,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                 "Registration successful, you can log in now",
                                                 Toast.LENGTH_LONG).show();
                                        CreateItinerary.createItineraryEntry("My First Itinerary",
+                                               "This is its brief description.",
                                                FirebaseAuth.getInstance().getCurrentUser().getUid());
                                         startActivity(new Intent(
                                                 RegisterActivity.this,
