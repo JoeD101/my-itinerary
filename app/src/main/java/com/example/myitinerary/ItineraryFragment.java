@@ -2,16 +2,15 @@ package com.example.myitinerary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,32 +47,54 @@ public class ItineraryFragment extends Fragment {
         userItineraries.get().addOnSuccessListener(documents -> {
             if(!documents.isEmpty())
             {
+                int i = 1;
+                int id = 100;
                 List<DocumentSnapshot> firebaseItineraries = documents.getDocuments();
                 for (DocumentSnapshot d : firebaseItineraries) {
-                    // create layouts for each itinerary
-                    /*LinearLayout itinBlock = new LinearLayout(getContext());
-                    ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    float df =  requireContext().getResources().getDisplayMetrics().density;
-                    lp.width = (int) (350 * df);
-                    lp.height = (int) (100 * df);
-                    itinBlock.setBackground(ContextCompat.getDrawable(requireActivity(),
-                            R.drawable.border_rectangle));
 
-                    ConstraintLayout cl = view.findViewById(R.id.layout);
-                    cl.addView(itinBlock);*/
+                    // add xml view for itinerary listing
+                    ConstraintLayout parentCl = view.findViewById(R.id.layout);
+                    ConstraintLayout itinListing = (ConstraintLayout) inflater.inflate(R.layout.itinerary_listing, parentCl, false);
+                    itinListing.setId(id);
+                    TextView itinDescription = itinListing.findViewById(R.id.itin_name);
+                    itinDescription.setText(d.getId());
+                    TextView itinDate = itinListing.findViewById(R.id.itin_date);
+                    String date = d.get("timeStart") + " - " + d.get("timeEnd");
+                    itinDate.setText(date);
+                    parentCl.addView(itinListing);
 
-                    TextView itinDescription = new TextView(getActivity());
-                    itinDescription.setText((String)d.get("description"));
+                    ConstraintSet set = new ConstraintSet();
+                    set.clone(parentCl);
 
-                    LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll);
+                    //set constraints of generated layout
+                    // TODO: itinListing height and padding is hardcoded as 100 for all
+                    //  below first itinerary, values from layout file
+                    if(i == 1) {
+                        set.connect(itinListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                ConstraintSet.TOP, dpToPx(15));
+                    }
+                    else {
+                        set.connect(itinListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                ConstraintSet.TOP, dpToPx(130*(i-1))+dpToPx(15));
+                    }
+                    set.applyTo(parentCl);
 
-                    linearLayout.addView(itinDescription);
+                    itinListing.setOnClickListener(v -> {
+                        Intent intent = new Intent(getContext(), Itinerary.class);
+                        intent.putExtra("itinName", d.getId());
+                        startActivity(intent);
+                    });
 
-                    String description = (String) d.get("description");
-                    Toast.makeText(getActivity(), description, Toast.LENGTH_SHORT).show();
+                    i++;
+                    id++;
                 }
             }
         });
         return view;
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = requireContext().getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }

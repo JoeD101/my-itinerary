@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/secondary"
-    tools:context=".ItineraryFragment">
+    tools:context=".ItineraryFragment"
+    >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -23,7 +24,7 @@
         tools:ignore="MissingConstraints"
         android:contentDescription="@string/create" />
 
-    <LinearLayout
+    <!-- <LinearLayout
         android:id="@+id/ll"
         android:layout_width="350dp"
         android:layout_height="100dp"
@@ -53,6 +54,6 @@
             android:layout_height="match_parent"
             android:text="Itinerary Name" />
 
-    </LinearLayout>
+    </LinearLayout> -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

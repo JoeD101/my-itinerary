@@ -1,4 +1,4 @@
-package com.example.myitinerary;
+/*package com.example.myitinerary;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,7 +46,7 @@ public class DeleteItinerary extends AppCompatActivity{
                 });
 
     */
-        db.collection("itineraries").document(uid).collection(itinName).get()
+ /*       db.collection("itineraries").document(uid).collection(itinName).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -97,4 +97,4 @@ public class DeleteItinerary extends AppCompatActivity{
 }
 
 
-
+*/
