@@ -56,8 +56,8 @@ public class ItineraryFragment extends Fragment {
                     ConstraintLayout parentCl = view.findViewById(R.id.layout);
                     ConstraintLayout itinListing = (ConstraintLayout) inflater.inflate(R.layout.itinerary_listing, parentCl, false);
                     itinListing.setId(id);
-                    TextView itinDescription = itinListing.findViewById(R.id.itin_name);
-                    itinDescription.setText(d.getId());
+                    TextView itinName = itinListing.findViewById(R.id.itin_name);
+                    itinName.setText((String) d.get("name"));
                     TextView itinDate = itinListing.findViewById(R.id.itin_date);
                     String date = d.get("timeStart") + " - " + d.get("timeEnd");
                     itinDate.setText(date);
@@ -81,7 +81,8 @@ public class ItineraryFragment extends Fragment {
 
                     itinListing.setOnClickListener(v -> {
                         Intent intent = new Intent(getContext(), Itinerary.class);
-                        intent.putExtra("itinName", d.getId());
+                        intent.putExtra("id", d.getId());
+                        intent.putExtra("itinName", (String) d.get("name"));
                         startActivity(intent);
                     });
 

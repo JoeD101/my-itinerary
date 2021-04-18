@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -13,26 +14,36 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CreateItinerary extends AppCompatActivity {
+
 
     // used in registration and createItinerary
     public static void createItineraryEntry(String itinName, String itinDescription, String uid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference itineraries = db.collection("itineraries").document("users");
+
+        //update number of itineraries
+        itineraries.update("numItins", FieldValue.increment(1));
+
         CollectionReference userItineraries = itineraries.collection(uid);
 
         Map<String, Object> itin1 = new HashMap<>();
         //needs automatically calculated and put into INFO document of itinerary event collection
         itin1.put("timeStart", 0);
         itin1.put("timeEnd", 0);
+        itin1.put("name", itinName);
         itin1.put("description", itinDescription);
-        // set itinerary name
-        userItineraries.document(itinName).set(itin1);
+        // set itinerary document id as random, this is identifier always in db, but field is edited
+        userItineraries.document().set(itin1);
+
         // create collection for events in that itinerary
         //userItineraries.document(itinName).collection("events");
 
