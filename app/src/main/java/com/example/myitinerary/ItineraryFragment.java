@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,12 +30,15 @@ public class ItineraryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.fragment_itineraries, container, false);
 
         // add create itinerary on fab
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(v -> startActivity(new Intent(getActivity(),
                 CreateItinerary.class)));
+
 
         //display itineraries
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
