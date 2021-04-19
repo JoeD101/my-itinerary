@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itinerary_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/secondary"
     tools:context=".Itinerary">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -15,65 +17,87 @@
         android:background="@color/main"
         app:layout_constraintBottom_toTopOf="@+id/deleteItin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:autoSizeTextType="uniform"
+            android:layout_marginTop="2dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backItineraries">
 
-            app:layout_constraintTop_toTopOf="parent">
-
-            <EditText
-                android:id="@+id/editItinName"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
-                android:background="@android:color/transparent"
-                android:backgroundTint="#FFFFFF"
-                android:drawableEnd="@drawable/edit_tertiary"
-                android:drawablePadding="5dp"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/itinerary_name"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:textColor="#FFFFFF"
-                android:textColorHighlight="#FFFFFF"
-                android:textColorHint="#FFFFFF"
-                android:textColorLink="#FFFFFF"
-                android:textSize="30sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:autoSizeTextType="uniform">
 
-            <EditText
-                android:id="@+id/editItinDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:background="@android:color/transparent"
-                android:backgroundTint="#FFFFFF"
-                android:drawableEnd="@drawable/edit_tertiary"
-                android:drawablePadding="5dp"
-                android:fontFamily="@font/roboto"
-                android:hint="@string/description"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:textColor="@color/off_white"
-                android:textColorHighlight="@color/off_white"
-                android:textColorHint="@color/off_white"
-                android:textColorLink="#FFFFFF"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editItinName" />
+                <EditText
+                    android:id="@+id/editItinName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="#FFFFFF"
+                    android:drawableStart="@drawable/edit_tertiary"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:hint="@string/itinerary_name"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:paddingRight="5dp"
+                    android:textColor="#FFFFFF"
+                    android:textColorHighlight="#FFFFFF"
+                    android:textColorHint="#FFFFFF"
+                    android:textColorLink="#FFFFFF"
+                    android:textSize="30sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <EditText
+                    android:id="@+id/editItinDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@android:color/transparent"
+                    android:backgroundTint="#FFFFFF"
+                    android:drawableStart="@drawable/edit_tertiary"
+                    android:drawablePadding="5dp"
+                    android:fontFamily="@font/roboto"
+                    android:hint="@string/description"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/off_white"
+                    android:textColorHighlight="@color/off_white"
+                    android:textColorHint="@color/off_white"
+                    android:textColorLink="#FFFFFF"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editItinName" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <ImageButton
+            android:id="@+id/backItineraries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:backgroundTint="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageButton
@@ -95,5 +119,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@android:drawable/ic_menu_save" />
+
+    <Button
+        android:id="@+id/newEventBttn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/tertiary"
+        android:text="@string/new_event"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/deleteItin"
+        app:layout_constraintStart_toEndOf="@+id/save" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

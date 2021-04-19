@@ -1,26 +1,26 @@
 package com.example.myitinerary;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.Map;
 
@@ -34,17 +34,9 @@ public class Itinerary extends AppCompatActivity {
         setContentView(R.layout.activity_itinerary);
         String itinID = getIntent().getStringExtra("id");
 
-        //String itineraryDesc = getIntent().getStringExtra("itinDescription");
-
-
-
         TextView itinNameEdit = findViewById(R.id.editItinName);
         TextView itinDescEdit = findViewById(R.id.editItinDesc);
-        //itinNameEdit.setText(itineraryName);
-        //itinDescEdit.setText(itineraryDesc);
 
-        String currentItinNameField;
-        String currentItinDesc;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         assert user != null;
@@ -52,10 +44,6 @@ public class Itinerary extends AppCompatActivity {
                 db.collection("itineraries").document("users")
                         .collection(user.getUid())
                         .document(itinID);
-
-
-
-        //itinerary.get()
 
         itinerary.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -77,85 +65,78 @@ public class Itinerary extends AppCompatActivity {
             }
         });
 
-
-
-
-        itinerary.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Toast.makeText(Itinerary.this,
-                            e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (snapshot != null && snapshot.exists()) {
-
-
-
-                } else {
-                    Toast.makeText(Itinerary.this,
-                            "Deleted: ", Toast.LENGTH_SHORT).show();
-                }
+        itinerary.addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Toast.makeText(Itinerary.this,
+                        e.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (snapshot == null) {
+                Toast.makeText(Itinerary.this,
+                        "Deleted itinerary", Toast.LENGTH_SHORT).show();
             }
         });
 
-        ImageButton delete = findViewById(R.id.deleteItin);
+        // create new event
+        Button newEventBttn = findViewById(R.id.newEventBttn);
+        newEventBttn.setOnClickListener(v ->
+            setFragment(new NewEventFragment(), itinID));
 
+        //back to home
+        ImageButton backItineraries = findViewById(R.id.backItineraries);
+        backItineraries.setOnClickListener(v ->
+                startActivity(new Intent(this, MainActivity.class)));
+
+        //delete itinerary
+        ImageButton delete = findViewById(R.id.deleteItin);
         delete.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AlertDialog);
             builder.setCancelable(true);
             builder.setTitle("Delete Itinerary");
             builder.setMessage("Are you sure you want to delete this?");
             builder.setPositiveButton("Confirm",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            deleteItinerary(itinID, user.getUid());
-                            //startActivity(new Intent(Itinerary.this, MainActivity.class));
+                    (dialog, which) -> {
+                        deleteItinerary(itinID, user.getUid());
+                        //startActivity(new Intent(Itinerary.this, MainActivity.class));
 
-                            Intent intent = new Intent(Itinerary.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            Itinerary.this.startActivity(intent);
-                        }
+                        Intent intent = new Intent(Itinerary.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Itinerary.this.startActivity(intent);
                     });
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
+            builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
             });
 
             AlertDialog dialog = builder.create();
             dialog.show();
         });
 
-
-
         ImageButton saveBtn = findViewById(R.id.save);
+        saveBtn.setOnClickListener(v -> {
+            String itinName = itinNameEdit.getText().toString().trim();
+            String itinDesc = itinDescEdit.getText().toString().trim();
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String itinName = itinNameEdit.getText().toString().trim();
-                String itinDesc = itinDescEdit.getText().toString().trim();
+            itinerary.update("name", itinName);
+            itinerary.update("description", itinDesc);
 
-                itinerary.update("name", itinName);
-                itinerary.update("description", itinDesc);
-
-                itinDescEdit.setText(itinDesc);
-                itinNameEdit.setText(itinName);
-                startActivity(new Intent(Itinerary.this, MainActivity.class));
-
-
-                // Do something in response to button click
-            }
+            itinDescEdit.setText(itinDesc);
+            itinNameEdit.setText(itinName);
+            startActivity(new Intent(Itinerary.this, MainActivity.class));
         });
 
+    }
 
-
-
-
-
-
+    private void setFragment(Fragment frag, String itinID) {
+        Bundle arguments = new Bundle();
+        arguments.putString("itinId" , itinID);
+        frag.setArguments(arguments);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction().setCustomAnimations(
+                R.anim.fade_in,
+                R.anim.fade_out
+        );
+        ConstraintLayout itin = findViewById(R.id.itinerary_layout);
+        itin.removeAllViews();
+        ft.replace(R.id.itinerary_layout, frag);
+        ft.commit();
     }
 
     public static void deleteItinerary(String itinName, String uid){
@@ -163,6 +144,7 @@ public class Itinerary extends AppCompatActivity {
         DocumentReference itineraries = db.collection("itineraries").document("users");
         CollectionReference userItineraries = itineraries.collection(uid);
 
+        itineraries.update("numItins", FieldValue.increment(-1));
         userItineraries.document(itinName).delete();
     }
 
