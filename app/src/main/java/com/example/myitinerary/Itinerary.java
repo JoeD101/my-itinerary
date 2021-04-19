@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,11 +33,16 @@ public class Itinerary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary);
         String itinID = getIntent().getStringExtra("id");
-        String itineraryName = getIntent().getStringExtra("itinName");
+
+        //String itineraryDesc = getIntent().getStringExtra("itinDescription");
+
+
 
         TextView itinNameEdit = findViewById(R.id.editItinName);
         TextView itinDescEdit = findViewById(R.id.editItinDesc);
-        itinNameEdit.setText(itineraryName);
+        //itinNameEdit.setText(itineraryName);
+        //itinDescEdit.setText(itineraryDesc);
+
         String currentItinNameField;
         String currentItinDesc;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -47,13 +53,20 @@ public class Itinerary extends AppCompatActivity {
                         .collection(user.getUid())
                         .document(itinID);
 
+
+
+        //itinerary.get()
+
         itinerary.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> itineraryData = document.getData();
                     assert itineraryData != null;
-                    //itinNameEdit.setText((String) itineraryData.get("description"));
+                    String itineraryName = document.getString("name");
+                    String itineraryDesc = document.getString("description");
+                    itinNameEdit.setText(itineraryName);
+                    itinDescEdit.setText(itineraryDesc);
 
                 } else {
                     Toast.makeText(this, "Error: no such document", LENGTH_LONG).show();
@@ -63,6 +76,9 @@ public class Itinerary extends AppCompatActivity {
                 Toast.makeText(this, "Error", LENGTH_LONG).show();
             }
         });
+
+
+
 
         itinerary.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -79,7 +95,7 @@ public class Itinerary extends AppCompatActivity {
 
                 } else {
                     Toast.makeText(Itinerary.this,
-                            "data is null", Toast.LENGTH_SHORT).show();
+                            "Deleted: ", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -115,8 +131,24 @@ public class Itinerary extends AppCompatActivity {
 
 
 
+        ImageButton saveBtn = findViewById(R.id.save);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                String itinName = itinNameEdit.getText().toString().trim();
+                String itinDesc = itinDescEdit.getText().toString().trim();
+
+                itinerary.update("name", itinName);
+                itinerary.update("description", itinDesc);
+
+                itinDescEdit.setText(itinDesc);
+                itinNameEdit.setText(itinName);
+                startActivity(new Intent(Itinerary.this, MainActivity.class));
 
 
+                // Do something in response to button click
+            }
+        });
 
 
 
