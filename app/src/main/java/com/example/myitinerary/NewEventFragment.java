@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link NewEventFragment//#newInstance} factory method to
@@ -20,6 +23,7 @@ public class NewEventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_event, container, false);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         Bundle arguments = getArguments();
         assert arguments != null;
@@ -28,6 +32,7 @@ public class NewEventFragment extends Fragment {
         view.findViewById(R.id.backItinerary).setOnClickListener(v -> {
                     Intent intent = new Intent(getContext(), Itinerary.class);
                     intent.putExtra("id", itinId);
+                    intent.putExtra("collection", user.getUid());
                     startActivity(intent);
                 });
 

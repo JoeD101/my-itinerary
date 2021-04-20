@@ -232,7 +232,7 @@ public class Itinerary extends AppCompatActivity {
                 for (DocumentSnapshot d : firebaseEvents) {
 
                     // add xml view for event listing
-                    ConstraintLayout parentCl = findViewById(R.id.itinerary_layout);
+                    ConstraintLayout parentCl = findViewById(R.id.events_itinerary);
 
                     //Travel Event
                     if (d.contains("startingAirport")) {

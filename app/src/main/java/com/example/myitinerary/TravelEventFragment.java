@@ -81,7 +81,8 @@ public class TravelEventFragment extends Fragment {
             Intent intent = new Intent(getContext(), Itinerary.class);
             assert bundle != null;
             intent.putExtra("id", bundle.getString("itinId"));
-            intent.putExtra("itinName", name[0]);
+            intent.putExtra("collection", user.getUid());
+            //intent.putExtra("itinName", name[0]);
             startActivity(intent);
         });
 
@@ -168,7 +169,8 @@ public class TravelEventFragment extends Fragment {
 
             Intent intent = new Intent(getContext(), Itinerary.class);
             intent.putExtra("id", bundle.getString("itinId"));
-            intent.putExtra("itinName", name[0]);
+            //intent.putExtra("itinName", name[0]);
+            intent.putExtra("collection", user.getUid());
             startActivity(intent);
         });
 
