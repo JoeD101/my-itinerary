@@ -67,7 +67,7 @@ public class ItineraryFragment extends Fragment {
                     String[] startToken = d.get("timeStart").toString().split(" ");
                     String[] endToken = d.get("timeEnd").toString().split(" ");
                     String date;
-
+                    //print times since some times could be empty
                     if(startToken.length == 1 && endToken.length == 1){
                         date = "";
                     }else if(endToken.length == 1){

@@ -106,8 +106,6 @@ public class Itinerary extends AppCompatActivity {
             builder.setPositiveButton("Confirm",
                     (dialog, which) -> {
                         deleteItinerary(itinID, user.getUid());
-                        //startActivity(new Intent(Itinerary.this, MainActivity.class));
-
                         Intent intent = new Intent(Itinerary.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         Itinerary.this.startActivity(intent);
@@ -118,7 +116,7 @@ public class Itinerary extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
         });
-
+        //save button
         ImageButton saveBtn = findViewById(R.id.save);
         saveBtn.setOnClickListener(v -> {
             String itinName = itinNameEdit.getText().toString().trim();
@@ -132,6 +130,7 @@ public class Itinerary extends AppCompatActivity {
             startActivity(new Intent(Itinerary.this, MainActivity.class));
         });
 
+        //edit start time
         ImageButton editStartTime = findViewById(R.id.startTimeEdit);
         editStartTime.setOnClickListener(v -> {
             final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
@@ -158,6 +157,7 @@ public class Itinerary extends AppCompatActivity {
             alertDialog.show();
         });
 
+        //edit end time
         ImageButton editEndTime = findViewById(R.id.endTimeEdit);
         editEndTime.setOnClickListener(v -> {
             final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
@@ -183,9 +183,6 @@ public class Itinerary extends AppCompatActivity {
             alertDialog.setView(dialogView);
             alertDialog.show();
         });
-
-
-
     }
 
     private void setFragment(Fragment frag, String itinID) {

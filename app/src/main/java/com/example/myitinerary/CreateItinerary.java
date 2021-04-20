@@ -77,7 +77,7 @@ public class CreateItinerary extends AppCompatActivity {
                 startActivity(new Intent(CreateItinerary.this, MainActivity.class)));
 
         Button start = findViewById(R.id.startTime);
-
+        //start time
         start.setOnClickListener(v -> {
             final View dialogView = View.inflate(CreateItinerary.this, R.layout.date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(CreateItinerary.this).create();
@@ -98,7 +98,6 @@ public class CreateItinerary extends AppCompatActivity {
                     TextView startTimeText = findViewById(R.id.startTimeText);
                     startTimeText.setText(startTimeText.getText() + calendarS.getTime().toString());
 
-                    //time = calendar.getTimeInMillis();
                     alertDialog.dismiss();
                 }});
             alertDialog.setView(dialogView);
@@ -106,7 +105,7 @@ public class CreateItinerary extends AppCompatActivity {
         });
 
         Button end = findViewById(R.id.endTime);
-
+        //end time
         end.setOnClickListener(v -> {
             final View dialogView = View.inflate(CreateItinerary.this, R.layout.date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(CreateItinerary.this).create();
@@ -127,7 +126,6 @@ public class CreateItinerary extends AppCompatActivity {
                     TextView endTimeText = findViewById(R.id.endTimeText);
                     endTimeText.setText(endTimeText.getText() + calendarE.getTime().toString());
 
-                    //time = calendar.getTimeInMillis();
                     alertDialog.dismiss();
                 }});
             alertDialog.setView(dialogView);
@@ -152,7 +150,7 @@ public class CreateItinerary extends AppCompatActivity {
             }
             assert user != null;
 
-
+            //no times might be selected
             if(calendarS == null && calendarE == null){
                 CreateItinerary.createItineraryEntry(itinName, itinDescription, user.getUid(), "", "");
             }else if(calendarS == null ){
