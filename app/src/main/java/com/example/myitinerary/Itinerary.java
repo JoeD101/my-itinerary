@@ -228,8 +228,8 @@ public class Itinerary extends AppCompatActivity {
             {
                 int i = 1;
                 int id = 100;
-                List<DocumentSnapshot> firebaseItineraries = documents.getDocuments();
-                for (DocumentSnapshot d : firebaseItineraries) {
+                List<DocumentSnapshot> firebaseEvents = documents.getDocuments();
+                for (DocumentSnapshot d : firebaseEvents) {
 
                     // add xml view for event listing
                     ConstraintLayout parentCl = findViewById(R.id.itinerary_layout);
