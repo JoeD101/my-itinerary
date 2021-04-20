@@ -3,11 +3,9 @@ package com.example.myitinerary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Calendar;
 import java.util.List;
 
 // Fragment shows all itinerary listings, when one clicked, go to Itinerary class activity w/
@@ -32,8 +29,6 @@ public class ItineraryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_itineraries, container, false);
 
         // add create itinerary on fab
@@ -64,7 +59,7 @@ public class ItineraryFragment extends Fragment {
                     itinListing.setId(id);
                     TextView itinName = itinListing.findViewById(R.id.itin_name);
                     itinName.setText((String) d.get("name"));
-                    TextView itinDate = itinListing.findViewById(R.id.itin_date);
+                    TextView itinDate = itinListing.findViewById(R.id.travel_event_date);
 
                     String[] startToken = d.get("timeStart").toString().split(" ");
                     String[] endToken = d.get("timeEnd").toString().split(" ");

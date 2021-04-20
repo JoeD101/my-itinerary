@@ -3,9 +3,11 @@ package com.example.myitinerary;
 import android.app.AlertDialog;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -28,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -213,9 +216,86 @@ public class Itinerary extends AppCompatActivity {
 
         });
 
+        //display events
+        CollectionReference userItineraryEvents =
+                db.collection("itineraries").document("users")
+                        .collection(user.getUid())
+                        .document(itinID)
+                        .collection("events");
 
+        userItineraryEvents.get().addOnSuccessListener(documents -> {
+            if(!documents.isEmpty())
+            {
+                int i = 1;
+                int id = 100;
+                List<DocumentSnapshot> firebaseItineraries = documents.getDocuments();
+                for (DocumentSnapshot d : firebaseItineraries) {
 
+                    // add xml view for event listing
+                    ConstraintLayout parentCl = findViewById(R.id.itinerary_layout);
 
+                    //Travel Event
+                    if (d.contains("startingAirport")) {
+                        ConstraintLayout eventListing = (ConstraintLayout) this.getLayoutInflater().inflate(R.layout.travel_event_listing, parentCl, false);
+
+                        eventListing.setId(id);
+                        TextView eventStartingAirport = eventListing.findViewById(R.id.airport1);
+                        eventStartingAirport.setText((String) d.get("startingAirport"));
+                        TextView eventEndingAirport = eventListing.findViewById(R.id.airport2);
+                        eventEndingAirport.setText((String) d.get("endingAirport"));
+                        TextView eventDate = eventListing.findViewById(R.id.travel_event_date);
+
+                        String[] startToken = d.get("timeStart").toString().split(" ");
+                        String[] endToken = d.get("timeEnd").toString().split(" ");
+                        String date;
+                        //print times since some times could be empty
+                        if (startToken.length == 1 && endToken.length == 1) {
+                            date = "";
+                        } else if (endToken.length == 1) {
+                            date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " -";
+                        } else if (startToken.length == 1) {
+                            date = "- " + endToken[1] + " " + endToken[2] + " " + endToken[3];
+                        } else {
+                            date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " - \n" +
+                                    endToken[1] + " " + endToken[2] + " " + endToken[3];
+                        }
+
+                        eventDate.setText(date);
+                        parentCl.addView(eventListing);
+
+                        ConstraintSet set = new ConstraintSet();
+                        set.clone(parentCl);
+
+                        //set constraints of generated layout
+                        // TODO: itinListing height and padding is hardcoded as 100 for all
+                        //  below first itinerary, values from layout file
+                        if (i == 1) {
+                            set.connect(eventListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                    ConstraintSet.TOP, dpToPx(15));
+                        } else {
+                            set.connect(eventListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                    ConstraintSet.TOP, dpToPx(130 * (i - 1)) + dpToPx(15));
+                        }
+                        set.applyTo(parentCl);
+
+                        /*eventListing.setOnClickListener(v -> { for editing
+                            Intent intent = new Intent(this, Itinerary.class);
+                            intent.putExtra("id", d.getId());
+                            intent.putExtra("itinName", (String) d.get("name"));
+                            intent.putExtra("collection", user.getUid());
+                            startActivity(intent);
+                        });*/
+                    }
+                    i++;
+                    id++;
+                }
+            }
+        });
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     private void setFragment(Fragment frag, String itinID) {

@@ -20,23 +20,27 @@
         android:gravity="center_vertical"
         android:padding="15dp"
         android:text="Date - Date"
-        app:layout_constraintBaseline_toBaselineOf="@+id/itin_name"
+        app:layout_constraintBaseline_toBaselineOf="@+id/airport1"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/itin_name"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:id="@+id/airport1"
+        android:layout_width="252dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:padding="15dp"
-        android:text="Itinerary Name"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintStart_toEndOf="@+id/travel_event_date"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:text="Airport1 Name"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/airport2"
+        android:layout_width="252dp"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="Airport2 Name"
+        tools:layout_editor_absoluteX="98dp"
+        tools:layout_editor_absoluteY="50dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

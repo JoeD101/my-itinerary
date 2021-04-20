@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.myitinerary.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -53,7 +49,7 @@ public class SharedFragment extends Fragment {
                     itinListing.setId(id);
                     TextView itinName = itinListing.findViewById(R.id.itin_name);
                     itinName.setText((String) d.get("name"));
-                    TextView itinDate = itinListing.findViewById(R.id.itin_date);
+                    TextView itinDate = itinListing.findViewById(R.id.travel_event_date);
 
                     String[] startToken = d.get("timeStart").toString().split(" ");
                     String[] endToken = d.get("timeEnd").toString().split(" ");
