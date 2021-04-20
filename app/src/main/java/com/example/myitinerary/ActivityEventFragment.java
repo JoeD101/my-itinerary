@@ -23,9 +23,9 @@ public class ActivityEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_activity_event, container, false);
 
         Bundle bundle = this.getArguments();
-        TextView test = view.findViewById(R.id.testItinId);
+        //TextView test = view.findViewById(R.id.testItinId);
         assert bundle != null;
-        test.setText(bundle.getString("itinId"));
+        //test.setText(bundle.getString("itinId"));
 
         return view;
     }
