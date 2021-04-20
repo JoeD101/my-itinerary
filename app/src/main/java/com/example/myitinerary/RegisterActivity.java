@@ -132,7 +132,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                 Toast.LENGTH_LONG).show();
                                        CreateItinerary.createItineraryEntry("My First Itinerary",
                                                "This is its brief description.",
-                                               FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                               FirebaseAuth.getInstance().getCurrentUser().getUid(), "0", "0");
                                         startActivity(new Intent(
                                                 RegisterActivity.this,
                                                 LoginActivity.class));

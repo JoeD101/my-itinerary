@@ -6,9 +6,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -36,6 +41,8 @@ public class Itinerary extends AppCompatActivity {
 
         TextView itinNameEdit = findViewById(R.id.editItinName);
         TextView itinDescEdit = findViewById(R.id.editItinDesc);
+        TextView itinStartEdit = findViewById(R.id.startTimeEditText);
+        TextView itinEndEdit = findViewById(R.id.endTimeEditText);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -55,6 +62,8 @@ public class Itinerary extends AppCompatActivity {
                     String itineraryDesc = document.getString("description");
                     itinNameEdit.setText(itineraryName);
                     itinDescEdit.setText(itineraryDesc);
+                    itinStartEdit.setText(itinStartEdit.getText() + " " + document.getString("timeStart"));
+                    itinEndEdit.setText(itinEndEdit.getText() + " " + document.getString("timeEnd"));
 
                 } else {
                     Toast.makeText(this, "Error: no such document", LENGTH_LONG).show();
@@ -122,6 +131,60 @@ public class Itinerary extends AppCompatActivity {
             itinNameEdit.setText(itinName);
             startActivity(new Intent(Itinerary.this, MainActivity.class));
         });
+
+        ImageButton editStartTime = findViewById(R.id.startTimeEdit);
+        editStartTime.setOnClickListener(v -> {
+            final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
+            final AlertDialog alertDialog = new AlertDialog.Builder(Itinerary.this).create();
+
+            dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                    TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+
+                    Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                            datePicker.getMonth(),
+                            datePicker.getDayOfMonth(),
+                            timePicker.getHour(),
+                            timePicker.getMinute());
+                    itinStartEdit.setText("Start Time: " + calendar.getTime().toString());
+                    itinerary.update("timeStart", calendar.getTime().toString());
+
+                    alertDialog.dismiss();
+                }});
+            alertDialog.setView(dialogView);
+            alertDialog.show();
+        });
+
+        ImageButton editEndTime = findViewById(R.id.endTimeEdit);
+        editEndTime.setOnClickListener(v -> {
+            final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
+            final AlertDialog alertDialog = new AlertDialog.Builder(Itinerary.this).create();
+
+            dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                    TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+
+                    Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                            datePicker.getMonth(),
+                            datePicker.getDayOfMonth(),
+                            timePicker.getHour(),
+                            timePicker.getMinute());
+                    itinEndEdit.setText("End Time: " + calendar.getTime().toString());
+                    itinerary.update("timeEnd", calendar.getTime().toString());
+
+                    alertDialog.dismiss();
+                }});
+            alertDialog.setView(dialogView);
+            alertDialog.show();
+        });
+
+
 
     }
 

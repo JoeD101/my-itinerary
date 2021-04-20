@@ -63,7 +63,24 @@ public class ItineraryFragment extends Fragment {
                     TextView itinName = itinListing.findViewById(R.id.itin_name);
                     itinName.setText((String) d.get("name"));
                     TextView itinDate = itinListing.findViewById(R.id.itin_date);
-                    String date = d.get("timeStart") + " - " + d.get("timeEnd");
+
+                    String[] startToken = d.get("timeStart").toString().split(" ");
+                    String[] endToken = d.get("timeEnd").toString().split(" ");
+                    String date;
+
+                    if(startToken.length == 1 && endToken.length == 1){
+                        date = "";
+                    }else if(endToken.length == 1){
+                        date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " -";
+                    }else if(startToken.length == 1){
+                        date = "- " + endToken[1] + " " + endToken[2] + " " + endToken[3];
+                    }else{
+                        date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " - \n" +
+                                endToken[1] + " " + endToken[2] + " " + endToken[3];
+                    }
+
+
+                            //String date = d.get("timeStart") + " - " + d.get("timeEnd");
                     itinDate.setText(date);
                     parentCl.addView(itinListing);
 
