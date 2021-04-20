@@ -138,23 +138,21 @@ public class Itinerary extends AppCompatActivity {
             final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(Itinerary.this).create();
 
-            dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            dialogView.findViewById(R.id.date_time_set).setOnClickListener((View.OnClickListener) view -> {
 
-                    DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
-                    TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
 
-                    Calendar calendar = new GregorianCalendar(datePicker.getYear(),
-                            datePicker.getMonth(),
-                            datePicker.getDayOfMonth(),
-                            timePicker.getHour(),
-                            timePicker.getMinute());
-                    itinStartEdit.setText("Start Time: " + calendar.getTime().toString());
-                    itinerary.update("timeStart", calendar.getTime().toString());
+                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getHour(),
+                        timePicker.getMinute());
+                itinStartEdit.setText("Start Time: " + calendar.getTime().toString());
+                itinerary.update("timeStart", calendar.getTime().toString());
 
-                    alertDialog.dismiss();
-                }});
+                alertDialog.dismiss();
+            });
             alertDialog.setView(dialogView);
             alertDialog.show();
         });
@@ -165,23 +163,21 @@ public class Itinerary extends AppCompatActivity {
             final View dialogView = View.inflate(Itinerary.this, R.layout.date_time_picker, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(Itinerary.this).create();
 
-            dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            dialogView.findViewById(R.id.date_time_set).setOnClickListener((View.OnClickListener) view -> {
 
-                    DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
-                    TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
+                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+                TimePicker timePicker = (TimePicker) dialogView.findViewById(R.id.time_picker);
 
-                    Calendar calendar = new GregorianCalendar(datePicker.getYear(),
-                            datePicker.getMonth(),
-                            datePicker.getDayOfMonth(),
-                            timePicker.getHour(),
-                            timePicker.getMinute());
-                    itinEndEdit.setText("End Time: " + calendar.getTime().toString());
-                    itinerary.update("timeEnd", calendar.getTime().toString());
+                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth(),
+                        timePicker.getHour(),
+                        timePicker.getMinute());
+                itinEndEdit.setText("End Time: " + calendar.getTime().toString());
+                itinerary.update("timeEnd", calendar.getTime().toString());
 
-                    alertDialog.dismiss();
-                }});
+                alertDialog.dismiss();
+            });
             alertDialog.setView(dialogView);
             alertDialog.show();
         });
