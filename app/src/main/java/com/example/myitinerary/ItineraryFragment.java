@@ -3,6 +3,7 @@ package com.example.myitinerary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
 import java.util.List;
 
 // Fragment shows all itinerary listings, when one clicked, go to Itinerary class activity w/
@@ -104,6 +106,7 @@ public class ItineraryFragment extends Fragment {
                         Intent intent = new Intent(getContext(), Itinerary.class);
                         intent.putExtra("id", d.getId());
                         intent.putExtra("itinName", (String) d.get("name"));
+                        intent.putExtra("collection", user.getUid());
                         startActivity(intent);
                     });
 

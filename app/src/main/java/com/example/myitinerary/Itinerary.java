@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -38,6 +39,7 @@ public class Itinerary extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary);
         String itinID = getIntent().getStringExtra("id");
+        String itinCol = getIntent().getStringExtra("collection");
 
         TextView itinNameEdit = findViewById(R.id.editItinName);
         TextView itinDescEdit = findViewById(R.id.editItinDesc);
@@ -49,7 +51,7 @@ public class Itinerary extends AppCompatActivity {
         assert user != null;
         DocumentReference itinerary =
                 db.collection("itineraries").document("users")
-                        .collection(user.getUid())
+                        .collection(itinCol)
                         .document(itinID);
 
         itinerary.get().addOnCompleteListener(task -> {
@@ -66,7 +68,7 @@ public class Itinerary extends AppCompatActivity {
                     itinEndEdit.setText(itinEndEdit.getText() + " " + document.getString("timeEnd"));
 
                 } else {
-                    Toast.makeText(this, "Error: no such document", LENGTH_LONG).show();
+                    Toast.makeText(this, "Opening Shared Itinerary", LENGTH_LONG).show();
 
                 }
             } else {
@@ -183,6 +185,41 @@ public class Itinerary extends AppCompatActivity {
             alertDialog.setView(dialogView);
             alertDialog.show();
         });
+
+        Button share = findViewById(R.id.share);
+        share.setOnClickListener(v -> {
+           // db.collection("itineraries").document("users").collection("shared").add(itinerary.get());
+
+            itinerary.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        DocumentReference itineraries = db.collection("itineraries").document("users");
+
+                        //update number of itineraries
+                        itineraries.update("numItins", FieldValue.increment(1));
+
+                        CollectionReference userItineraries = itineraries.collection("shared");
+
+                        Map<String, Object> itin1 = new HashMap<>();
+                        //needs automatically calculated and put into INFO document of itinerary event collection
+                        itin1.put("timeStart", document.getString("timeStart"));
+                        itin1.put("timeEnd", document.getString("timeEnd"));
+                        itin1.put("name", document.getString("name"));
+                        itin1.put("description", document.getString("description"));
+                        // set itinerary document id as random, this is identifier always in db, but field is edited
+                        userItineraries.document().set(itin1);
+
+                    }
+                }
+            });
+
+
+        });
+
+
+
+
     }
 
     private void setFragment(Fragment frag, String itinID) {

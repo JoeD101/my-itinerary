@@ -80,6 +80,7 @@ public class CreateItinerary extends AppCompatActivity {
         //start time
         start.setOnClickListener(v -> {
             final View dialogView = View.inflate(CreateItinerary.this, R.layout.date_time_picker, null);
+            //View view = View.inflate(this, R.layout.LAYOUT, null);
             final AlertDialog alertDialog = new AlertDialog.Builder(CreateItinerary.this).create();
 
             dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
