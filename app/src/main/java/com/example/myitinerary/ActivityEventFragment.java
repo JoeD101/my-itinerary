@@ -166,10 +166,12 @@ public class ActivityEventFragment extends Fragment {
                 return;
             }
 
-            ActivityEventFragment.createEvent(name2, description2, calendarS.getTime().toString(), calendarE.getTime().toString(), user.getUid(), bundle.getString("itinID"));
+
+            ActivityEventFragment.createEvent(name2, description2, calendarS.getTime().toString(), calendarE.getTime().toString(), user.getUid(), bundle.getString("itinId"));
             Intent intent = new Intent(getContext(), Itinerary.class);
             intent.putExtra("id", bundle.getString("itinId"));
             intent.putExtra("itinName", name[0]);
+            intent.putExtra("collection", user.getUid());
             startActivity(intent);
         });
         return view;

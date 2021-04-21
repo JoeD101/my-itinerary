@@ -206,6 +206,7 @@ public class Itinerary extends AppCompatActivity {
                         itin1.put("timeEnd", document.getString("timeEnd"));
                         itin1.put("name", document.getString("name"));
                         itin1.put("description", document.getString("description"));
+
                         // set itinerary document id as random, this is identifier always in db, but field is edited
                         userItineraries.document().set(itin1);
 
@@ -278,14 +279,68 @@ public class Itinerary extends AppCompatActivity {
                         }
                         set.applyTo(parentCl);
 
-                        /*eventListing.setOnClickListener(v -> { for editing
-                            Intent intent = new Intent(this, Itinerary.class);
-                            intent.putExtra("id", d.getId());
-                            intent.putExtra("itinName", (String) d.get("name"));
-                            intent.putExtra("collection", user.getUid());
-                            startActivity(intent);
-                        });*/
                     }
+                    i++;
+                    id++;
+                }
+            }
+        });
+        CollectionReference userItineraryActivities =
+                db.collection("itineraries").document("users")
+                        .collection(user.getUid())
+                        .document(itinID)
+                        .collection("activities");
+
+        userItineraryActivities.get().addOnSuccessListener(documents -> {
+            if(!documents.isEmpty())
+            {
+                int i = 1;
+                int id = 100;
+                List<DocumentSnapshot> firebaseEvents = documents.getDocuments();
+                for (DocumentSnapshot d : firebaseEvents) {
+
+                    // add xml view for event listing
+                    ConstraintLayout parentCl = findViewById(R.id.events_itinerary);
+
+                        ConstraintLayout activityListing = (ConstraintLayout) this.getLayoutInflater().inflate(R.layout.itinerary_listing, parentCl, false);
+
+                        activityListing.setId(id);
+                        TextView itinName = activityListing.findViewById(R.id.itin_name);
+                        itinName.setText((String) d.get("name"));
+                        TextView itinDate = activityListing.findViewById(R.id.travel_event_date);
+
+                        String[] startToken = d.get("timeStart").toString().split(" ");
+                        String[] endToken = d.get("timeEnd").toString().split(" ");
+                        String date;
+                        //print times since some times could be empty
+                        if (startToken.length == 1 && endToken.length == 1) {
+                            date = "";
+                        } else if (endToken.length == 1) {
+                            date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " -";
+                        } else if (startToken.length == 1) {
+                            date = "- " + endToken[1] + " " + endToken[2] + " " + endToken[3];
+                        } else {
+                            date = startToken[1] + " " + startToken[2] + " " + startToken[3] + " - \n" +
+                                    endToken[1] + " " + endToken[2] + " " + endToken[3];
+                        }
+
+                    itinDate.setText(date);
+                        parentCl.addView(activityListing);
+
+                        ConstraintSet set = new ConstraintSet();
+                        set.clone(parentCl);
+
+                        //set constraints of generated layout
+                        // TODO: itinListing height and padding is hardcoded as 100 for all
+                        //  below first itinerary, values from layout file
+                        if (i == 1) {
+                            set.connect(activityListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                    ConstraintSet.TOP, dpToPx(15));
+                        } else {
+                            set.connect(activityListing.getId(), ConstraintSet.TOP, parentCl.getId(),
+                                    ConstraintSet.TOP, dpToPx(130 * (i - 1)) + dpToPx(15));
+                        }
+                        set.applyTo(parentCl);
                     i++;
                     id++;
                 }
